@@ -1,0 +1,26 @@
+---
+- name: Setup Web Server
+  hosts: servers  # This should match the hostname in your inventory file
+  become: yes  # Run tasks as sudo
+
+  tasks:
+    - name: Install Apache (HTTPD) on Ubuntu
+      apt:
+        name: apache2
+        state: present
+        update_cache: yes
+
+    - name: Copy index.html to web server
+      copy:
+        src: /home/ubuntu/index.html   # Path of index.html on control node
+        dest: /var/www/html/index.html
+        owner: www-data
+        group: www-data
+        mode: '0644'
+
+    - name: Start and enable Apache service
+      service:
+        name: apache2
+        state: started
+        enabled: yes
+
